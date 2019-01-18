@@ -18,7 +18,7 @@ def binutils_version='2.31'
 def recipe_location = 'gnu'
 
 //musl
-//def musl_version='v1.1.18'
+def musl_version='v1.1.18'
 
 node {
    label 'conan_worker'
