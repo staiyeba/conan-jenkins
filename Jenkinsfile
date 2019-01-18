@@ -18,7 +18,7 @@ def binutils_version='2.31'
 def recipe_location = 'gnu'
 
 //musl
-def musl_version='v1.1.18'
+//def musl_version='v1.1.18'
 
 node {
    label 'conan_worker'
@@ -43,7 +43,10 @@ node {
     stage("Build recipe - musl"){
           sh """
             echo "creating musl"
-            conan create conan/musl/${musl_version} conan/musl/${musl_version}@${conan_user}/${conan_channel}
+            for musl_version in `find - --type d`
+            do
+              conan create conan/musl/${musl_version} ${conan_user}/${conan_channel}
+            done
           """
     }
 }
