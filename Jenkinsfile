@@ -43,7 +43,7 @@ node {
     stage("Build - musl"){
           sh """
             echo "creating musl"
-            conan create conan/musl/${musl_version}@${conan_user}/${conan_channel}
+            conan create conan/musl/1.1.20 conan/musl/${musl_version}@${conan_user}/${conan_channel}
           """
     }
 }
