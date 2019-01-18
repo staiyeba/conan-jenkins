@@ -43,9 +43,12 @@ node {
     stage("Build recipe - musl"){
           sh """
             echo "creating musl"
-            for musl_version in `find - --type d`
+            for version in *;
             do
-              conan create conan/musl/${musl_version} ${conan_user}/${conan_channel}
+              if [-d "${version}"]; then
+                echo "${version}"
+                conan create conan/musl/${version} ${conan_user}/${conan_channel}
+              fi
             done
           """
     }
