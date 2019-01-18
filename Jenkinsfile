@@ -20,8 +20,8 @@ def recipe_location = 'gnu'
 //musl
 def musl_version='v1.1.18'
 
-//libunwind
-def libunwind_version='7.0'
+//llv
+def llv_version='7.0'
 
 node {
    label 'conan_worker'
@@ -51,10 +51,14 @@ node {
           """
     }
 
-    stage("Build recipe - libunwind"){
+    stage("Build recipe - llv"){
           sh """
             echo "creating libunwind"
-            conan create conan/libunwind/${libunwind_version} ${conan_user}/${conan_channel}
+            conan create conan/llv/libunwind/${llv_version} ${conan_user}/${conan_channel}
+            echo "creating libcxxabi"
+            conan create conan/llv/libcxxabi/${llv_version} ${conan_user}/${conan_channel}
+            echo "creating libcxx"
+            conan create conan/llv/libcxx/${llv_version} ${conan_user}/${conan_channel}
 
           """
     }
