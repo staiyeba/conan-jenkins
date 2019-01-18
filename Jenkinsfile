@@ -18,7 +18,7 @@ def binutils_version='2.31'
 def recipe_location = 'gnu'
 
 //musl
-def musl_version='v1.1.20'
+def musl_version='v1.1.18'
 
 node {
    label 'conan_worker'
@@ -33,14 +33,14 @@ node {
         echo "$PATH"
     }
 
-    stage("Build - binutils"){
+    stage("Build recipe - binutils"){
           sh """
             echo "creating binutils"
             conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
           """
     }
 
-    stage("Build - musl"){
+    stage("Build recipe - musl"){
           sh """
             echo "creating musl"
             conan create conan/musl/${musl_version} conan/musl/${musl_version}@${conan_user}/${conan_channel}
