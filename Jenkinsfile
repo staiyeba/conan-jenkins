@@ -43,13 +43,8 @@ node {
     stage("Build recipe - musl"){
           sh """
             echo "creating musl"
-            for version in *;
-            do
-              if [-d "${version}"]; then
-                echo "${version}"
-                conan create conan/musl/${version} ${conan_user}/${conan_channel}
-              fi
-            done
+            conan create conan/musl/${musl_version} ${conan_user}/${conan_channel}
+
           """
     }
 }
