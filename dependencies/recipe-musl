@@ -20,22 +20,7 @@ pipeline {
   }
 
 stages {
-    stage("get project") {
-      node('conan_worker') {
-        //TODO replace with SCM snapshot.. if possible pull only the conan folder
-        git branch: repo_branch, url: repo_url
-        echo "$PATH"
-      }
-    }
 
-    stage("Build binutils") {
-      node('conan_pipe_worker') {
-          sh """
-            echo "creating binutils - (in future download binutils from local conan repo)"
-            conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
-          """
-      }
-    }
 
     stage('Build musl') {
       steps {
