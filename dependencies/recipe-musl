@@ -12,50 +12,52 @@ def binutils_version='2.31'
 def recipe_location = 'gnu'
 
 pipeline {
-  agent { label 'conan_pipe_worker'}
+  agent {
+    label 'conan_worker'
+  }
+
   parameters {
     string(name: 'Versions', defaultValue: 'v1.1.18, v1.1.19, v1.1.20')
-    string(name: 'Build_types', defaultValue: 'release, debug')
+    string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Architectures', defaultValue: 'x86_64, i686')
   }
 
-stages {
+  stages {
+      stage('Build musl') {
+        steps {
+          git branch: repo_branch, url: repo_url
+          echo "$PATH"
+          script {
+            def versions = "${params.Versions}".replaceAll("\\s", "").split(',')
+            def architectures = "${params.Architectures}".replaceAll("\\s", "").split(',')
+            def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
 
-    stage('Build musl') {
-      steps {
-        git branch: repo_branch, url: repo_url
-        echo "$PATH"
-        script {
-          def versions = "${params.Versions}".replaceAll("\\s", "").split(',')
-          def architectures = "${params.Architectures}".replaceAll("\\s", "").split(',')
-          def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
+            def builds = [:]
 
-          def builds = [:]
+            for (ver in versions) {
+              for (arch in architectures) {
+                for (build in build_types) {
+                  String buildName = "${build}-${arch}-${ver}"
 
-          for (ver in versions) {
-            for (arch in architectures) {
-              for (build in build_types) {
-                String buildName = "${build}-${arch}-${ver}"
+                  builds[buildName] = {
+                    node('conan_pipe_worker') {
+                      stage(buildName) {
+                          sh """
+                            echo "DEPENDENCY BUILD: creating binutils - (in future download binutils from local conan repo)"
+                            conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
+                            echo "creating musl : ${versions}, build_type = ${build_types}"
+                            conan create conan/musl/${versions} ${conan_user}/${conan_channel} --settings build_type=${build_types}
+                          """
 
-                builds[buildName] = {
-                  node('conan_pipe_worker') {
-                    stage(buildName) {
-                        sh """
-                          echo "DEPENDENCY BUILD: creating binutils - (in future download binutils from local conan repo)"
-                          conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
-                          echo "creating musl : ${versions}, build_type = ${build_types}"
-                          conan create conan/musl/${versions} ${conan_user}/${conan_channel} --settings build_type=${build_type}
-                        """
-
+                      }
                     }
                   }
                 }
               }
             }
+            parallel builds
           }
-          parallel builds
         }
       }
-    }
-}
+  }
 }
