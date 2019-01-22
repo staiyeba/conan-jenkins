@@ -1,9 +1,3 @@
-//checkout repo
-//build recipe
-//deploy package
-//basically
-//for loop multi jobs..
-
 def artifactory_name = "kristianj"
 def artifactory_repo = "includeos-develop"
 def repo_url = 'https://github.com/hioa-cs/IncludeOS.git'
@@ -12,55 +6,57 @@ def repo_branch = 'conan'
 def conan_user = 'kristian'
 def conan_channel = 'demo'
 
-def build_type = ["Release", "Debug"]
+pipeline {
+  agent {
+    label 'conan_pipe_worker'
+  }
 
-def version = ["v1.1.18", "v1.1.19"]
+  // should create a library for these lists of values
+  parameters {
+    string(name: 'Dependencies', defaultValue: 'musl')
+    string(name: 'Versions', defaultValue: 'v1.1.18')
+    string(name: 'Build_types', defaultValue: 'Release, Debug')
+    string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
+    string(name: 'Target_OS', defaultValue: 'Linux')
+    string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64, gcc-8.2.0-linux-x86_64')
+  }
 
-node('conan-worker-1'){
-    def server
-    def client
-    def serverNamelabel
+  stages {
+      stage('Build') {
+        steps {
 
-    stage("Get project"){
+          script {
+            def dependencies = "${params.Dependencies}"
+            def versions = "${params.Versions}"
+            def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
+            def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
+            def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
 
-        //TODO replace with SCM snapshot.. if possible pull only the conan folder
-        git branch: repo_branch, url: repo_url
-        echo "$PATH"
-    }
+            def builds = [:]
 
-    stage("Build/Get binutils"){
+            for (prof in profiles) {
+              for (dep in dependencies) {
+                for (build in build_types) {
+                  String buildName = "${dep}-${versions}-${build}-${prof}"
 
-        script {
-            echo "should build or get binutils - turned off for now"
-            // build job: "recipe-binutils" // builds binutils
-        }
-
-    }
-
-    // conan create conan/musl/${musl_version} ${conan_user}/${conan_channel} --settings build_type=Release
-
-    stage("Build musl"){
-
-        script {
-
-            for(int i=0; i<=build_type.size(); i++){
-                def tasks = [:]
-                for(int j=0; j<build_type.size(); j++){
-                    def build_ver = version[i]
-                    def build_set = build_type[i]
-                    def label = build_set
-                    tasks[label] = { -> build job: "recipe-musl",
-                        parameters: [
-                                string(name: "version", value: "v1.1.19"), // should be a variable from a list
-                                string(name: "build_type", value: build_set) // build_type = Debug / Release
-                        ]
+                  builds[buildName] = {
+                    node('conan_pipe_worker') {
+                      stage(buildName) {
+                          git branch: repo_branch, url: repo_url
+                          sh """
+                            echo "-${versions}-${versions}"
+                            echo "creating ${dep} : ${versions} build_type = ${build} HOST os arch_target = ${t_arch}"
+                            conan create conan/${dep}/${versions} ${conan_user}/${conan_channel} -pr ${prof} -s build_type=${build}
+                          """
+                      }
                     }
-
+                  }
                 }
-                parallel(tasks)
+              }
             }
-
+            parallel builds
+          }
         }
-
-    }
+      }
+  }
 }
