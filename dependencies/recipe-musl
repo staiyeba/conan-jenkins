@@ -32,9 +32,6 @@ stages {
 
           def builds = [:]
 
-          echo "DEPENDENCY BUILD: creating binutils - (in future download binutils from local conan repo)"
-          conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
-
           for (ver in versions) {
             for (arch in architectures) {
               for (build in build_types) {
@@ -42,9 +39,15 @@ stages {
 
                 builds[buildName] = {
                   node('conan_pipe_worker') {
+                    stage("build dependency") {
+                      sh """
+                        echo "DEPENDENCY BUILD: creating binutils - (in future download binutils from local conan repo)"
+                        conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
+                      """
+                    }
                     stage(buildName) {
                         sh """
-                        //  echo "creating musl : ${version}, build_type = ${build_type}"
+                          echo "creating musl : ${version}, build_type = ${build_type}"
                           conan create conan/musl/${version} ${conan_user}/${conan_channel} --settings build_type=${build_type}
                         """
 
