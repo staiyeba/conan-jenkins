@@ -8,13 +8,13 @@ def conan_channel = 'demo'
 
 pipeline {
   agent {
-    label 'conan-worker-2'
+    label 'conan_pipe_worker'
   }
 
   parameters {
     string(name: 'Versions', defaultValue: 'v1.1.18, v1.1.19, v1.1.20')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
-    string(name: 'Architectures', defaultValue: 'x86_64, i686')
+    string(name: 'Target_Architectures', defaultValue: 'x86_64, i686')
   }
 
   stages {
@@ -25,18 +25,18 @@ pipeline {
             def binutils_version='2.31'
 
             def versions = "${params.Versions}".replaceAll("\\s", "").split(',')
-            def architectures = "${params.Architectures}".replaceAll("\\s", "").split(',')
+            def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
 
             def builds = [:]
 
             for (ver in versions) {
-              for (arch in architectures) {
+              for (t_arch in target_architectures) {
                 for (build in build_types) {
-                  String buildName = "${build}-${arch}-${ver}"
+                  String buildName = "${build}-${t_arch}-${ver}"
 
                   builds[buildName] = {
-                    node('conan-worker-2') {
+                    node('conan_pipe_worker') {
                       stage(buildName) {
                           git branch: repo_branch, url: repo_url
                           sh """
@@ -44,7 +44,7 @@ pipeline {
                             ls
                             echo "DEPENDENCY BUILD: creating binutils"
                             conan create conan/gnu/binutils/${binutils_version} ${conan_user}/${conan_channel}
-                            echo "creating musl : ${ver}, build_type = ${build}"
+                            echo "creating musl : ${ver}, build_type = ${build} on arch_target = ${t_arch}"
                             conan create conan/musl/${ver} ${conan_user}/${conan_channel} --settings build_type=${build}
                           """
                       }
