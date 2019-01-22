@@ -36,14 +36,14 @@ pipeline {
             for (prof in profiles) {
               for (t_arch in target_architectures) {
                 for (build in build_types) {
-                  String buildName = "${build}-${t_arch}-${ver}"
+                  String buildName = "${build}-${t_arch}-${prof}"
 
                   builds[buildName] = {
                     node('conan_pipe_worker') {
                       stage(buildName) {
                           git branch: repo_branch, url: repo_url
                           sh """
-                            echo "creating musl : ${ver}, build_type = ${build}, HOST os arch_target = ${t_arch}"
+                            echo "creating musl : ${versions}, build_type = ${build}, HOST os arch_target = ${t_arch}"
                             conan create conan/musl/${versions} ${conan_user}/${conan_channel} -pr ${profiles} -s build_type=${build}
                           """
                       }
