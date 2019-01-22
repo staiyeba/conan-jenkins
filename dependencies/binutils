@@ -1,0 +1,40 @@
+//checkout repo
+//build recipe
+//deploy package
+//basically
+//for loop multi jobs..
+def artifactory_name = "kristianj"
+def artifactory_repo = "includeos-develop"
+def repo_url = 'https://github.com/hioa-cs/IncludeOS.git'
+def repo_branch = 'conan'
+def binutils_version='2.31'
+def conan_user = 'kristian'
+def conan_channel = 'demo'
+def recipe_location = 'gnu'
+
+node {
+
+   def server
+   def client
+   def serverNamelabel = "conan_pipe_worker"
+
+    stage("Get project"){
+        //TODO replace with SCM snapshot.. if possible pull only the conan folder
+        git branch: repo_branch, url: repo_url
+        echo "$PATH"
+    }
+
+    stage("Build recipe - binutils"){
+          sh """
+            echo "creating binutils"
+            conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
+          """
+    }
+
+    stage("Upload recipes to local library"){
+          sh """
+            echo "Uploading to local conan library"
+
+          """
+    }
+}
