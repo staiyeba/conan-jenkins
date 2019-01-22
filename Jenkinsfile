@@ -12,61 +12,55 @@ def repo_branch = 'conan'
 def conan_user = 'kristian'
 def conan_channel = 'demo'
 
-// binutils
-def binutils_version='2.31'
-// applies for binutils as in resides in the gnu directory
-def recipe_location = 'gnu'
+def build_type = ["Release", "Debug"]
 
-//musl
-def musl_version='v1.1.18'
+def version = ["v1.1.18", "v1.1.19"]
 
-//llv
-def llv_version='7.0'
-
-node {
-   label 'conan_worker'
-
-   def server
-   def client
-   def serverName
+node('conan-worker-1'){
+    def server
+    def client
+    def serverNamelabel
 
     stage("Get project"){
+
         //TODO replace with SCM snapshot.. if possible pull only the conan folder
         git branch: repo_branch, url: repo_url
         echo "$PATH"
     }
 
-    stage("Build recipe - binutils"){
-          sh """
-            echo "creating binutils"
-            conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
-          """
+    stage("Build/Get binutils"){
+
+        script {
+            echo "should build or get binutils - turned off for now"
+            // build job: "recipe-binutils" // builds binutils
+        }
+
     }
 
-    stage("Build recipe - musl"){
-          sh """
-            echo "creating musl"
-            conan create conan/musl/${musl_version} ${conan_user}/${conan_channel}
+    // conan create conan/musl/${musl_version} ${conan_user}/${conan_channel} --settings build_type=Release
 
-          """
-    }
+    stage("Build musl"){
 
-    stage("Build recipe - llv"){
-          sh """
-            echo "creating libunwind"
-            conan create conan/llv/libunwind/${llv_version} ${conan_user}/${conan_channel}
-            echo "creating libcxxabi"
-            conan create conan/llv/libcxxabi/${llv_version} ${conan_user}/${conan_channel}
-            echo "creating libcxx"
-            conan create conan/llv/libcxx/${llv_version} ${conan_user}/${conan_channel}
+        script {
 
-          """
-    }
+            for(int i=0; i<build_type.size(); i++){
+                def tasks = [:]
+                for(int j=0; j<build_type.size(); j++){
+                    def build_ver = version[i]
+                    def build_set = build_type[i]
+                    def label = build_set
+                    tasks[label] = { -> build job: "recipe-musl",
+                        parameters: [
+                                string(name: "version", value: "v1.1.19"), // should be a variable from a list
+                                string(name: "build_type", value: build_set) // build_type = Debug / Release
+                        ]
+                    }
 
-    stage("Upload recipes to local library"){
-          sh """
-            echo "Uploading to local conan library"
+                }
+                parallel(tasks)
+            }
 
-          """
+        }
+
     }
 }
