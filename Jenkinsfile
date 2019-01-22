@@ -44,8 +44,7 @@ pipeline {
                       stage(buildName) {
                           git branch: repo_branch, url: repo_url
                           sh """
-                            echo "-${versions}-${versions}"
-                            echo "creating ${dependencies} : ${versions} build_type = ${build} HOST os arch_target = ${t_arch}"
+                            echo "creating ${dependencies} : ${versions} build_type = ${build} HOST os arch_target = ${target_arch}"
                             conan create conan/${dependencies}/${versions} ${conan_user}/${conan_channel} -pr ${prof} -s build_type=${build}
                           """
                       }
