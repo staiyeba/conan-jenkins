@@ -37,6 +37,7 @@ pipeline {
 
                   builds[buildName] = {
                     node('conan_pipe_worker') {
+                        git branch: repo_branch, url: repo_url
                         stage(buildName){
                               sh """
                                 echo "creating binutils"
