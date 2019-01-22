@@ -26,7 +26,7 @@ pipeline {
           script {
             def binutils_version='2.31'
 
-            def versions = ${params.Versions}
+            def versions = "${params.Versions}"
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
