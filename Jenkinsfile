@@ -35,9 +35,9 @@ pipeline {
             def builds = [:]
 
             for (prof in profiles) {
-              for (dep in dependencies) {
+              for (target_arch in target_architectures) {
                 for (build in build_types) {
-                  String buildName = "${dep}-${versions}-${build}-${prof}"
+                  String buildName = "${dependencies}-${versions}-${build}-${prof}"
 
                   builds[buildName] = {
                     node('conan_pipe_worker') {
@@ -45,8 +45,8 @@ pipeline {
                           git branch: repo_branch, url: repo_url
                           sh """
                             echo "-${versions}-${versions}"
-                            echo "creating ${dep} : ${versions} build_type = ${build} HOST os arch_target = ${t_arch}"
-                            conan create conan/${dep}/${versions} ${conan_user}/${conan_channel} -pr ${prof} -s build_type=${build}
+                            echo "creating ${dependencies} : ${versions} build_type = ${build} HOST os arch_target = ${t_arch}"
+                            conan create conan/${dependencies}/${versions} ${conan_user}/${conan_channel} -pr ${prof} -s build_type=${build}
                           """
                       }
                     }
