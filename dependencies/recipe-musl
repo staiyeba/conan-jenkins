@@ -1,0 +1,69 @@
+def artifactory_name = "kristianj"
+def artifactory_repo = "includeos-develop"
+def repo_url = 'https://github.com/hioa-cs/IncludeOS.git'
+def repo_branch = 'conan'
+
+def conan_user = 'kristian'
+def conan_channel = 'demo'
+
+// binutils
+def binutils_version='2.31'
+// applies for binutils as in resides in the gnu directory
+def recipe_location = 'gnu'
+
+pipeline {
+  agent { label 'conan_pipe_worker'}
+  parameters {
+    string(name: 'Versions', defaultValue: '1.1.18, 1.1.19, 1.1.20')
+    string(name: 'Architectures', defaultValue: 'release, debug')
+    string(name: 'Build_types', defaultValue: 'x86_64, i686')
+  }
+
+stages {
+    stage("get project") {
+      node('conan_worker') {
+        //TODO replace with SCM snapshot.. if possible pull only the conan folder
+        git branch: repo_branch, url: repo_url
+        echo "$PATH"
+      }
+    }
+
+    stage("Build binutils") {
+      node('conan_pipe_worker') {
+          sh """
+            echo "creating binutils - (in future download binutils from local conan repo)"
+            conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
+          """
+      }
+    }
+
+    stage('Build musl') {
+      steps {
+        script {
+          def versions = "${params.Versions}".replaceAll("\\s", "").split(',')
+          def architectures = "${params.Architectures}".replaceAll("\\s", "").split(',')
+          def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
+
+          def builds = [:]
+
+          for (ver in versions) {
+            for (arch in architectures) {
+              for (build in build_types) {
+                String buildName = "${build}-${arch}-${ver}"
+
+                builds[buildName] = {
+                  node('conan_pipe_worker') {
+                    stage(buildName) {
+                      echo "creating musl : ${version}, build_type = ${build_type}"
+                      conan create conan/musl/${version} ${conan_user}/${conan_channel} --settings build_type=${build_type}
+                    }
+                  }
+                }
+              }
+            }
+          }
+          parallel builds
+        }
+      }
+    }
+}
