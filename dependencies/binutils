@@ -10,7 +10,7 @@ def conan_channel = 'demo'
 
 def recipe_location = 'gnu'
 
-node {
+node ("conan_pipe_worker"){
 
    def server
    def client
