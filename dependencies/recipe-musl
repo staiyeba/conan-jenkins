@@ -45,7 +45,8 @@ pipeline {
                           sh """
                             echo "${versions}"
                             echo "creating musl : ${versions} build_type = ${build} HOST os arch_target = ${t_arch}"
-                            
+                            conan create conan/musl/${versions} ${conan_user}/${conan_channel} -pr ${prof} -s build_type=${build}
+
 
                           """
                       }
