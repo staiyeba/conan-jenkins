@@ -42,6 +42,7 @@ pipeline {
                           sh """
                             pwd
                             conan
+                            conan create conan/gnu/binutils/2.31 kristian/demo
                           """
                       }
                     }
