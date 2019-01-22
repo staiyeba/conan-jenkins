@@ -13,7 +13,7 @@ def recipe_location = 'gnu'
 
 pipeline {
   agent {
-    label 'conan_worker'
+    label 'conan_pipe_worker'
   }
 
   parameters {
