@@ -44,7 +44,9 @@ pipeline {
                           git branch: repo_branch, url: repo_url
                           sh """
                             echo "${versions}"
+                            echo "creating musl : ${versions} build_type = ${build} HOST os arch_target = ${t_arch}"
                             
+
                           """
                       }
                     }
