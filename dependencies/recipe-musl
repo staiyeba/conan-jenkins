@@ -15,8 +15,8 @@ pipeline {
   agent { label 'conan_pipe_worker'}
   parameters {
     string(name: 'Versions', defaultValue: 'v1.1.18, v1.1.19, v1.1.20')
-    string(name: 'Architectures', defaultValue: 'release, debug')
-    string(name: 'Build_types', defaultValue: 'x86_64, i686')
+    string(name: 'Build_types', defaultValue: 'release, debug')
+    string(name: 'Architectures', defaultValue: 'x86_64, i686')
   }
 
 stages {
