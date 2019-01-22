@@ -17,9 +17,9 @@ pipeline {
   }
 
   parameters {
-    string(name: "Versions", defaultValue: ["v1.1.18", "v1.1.19", "v1.1.20"])
-    string(name: "Build_types", defaultValue: ["Release", "Debug"])
-    string(name: "Architectures", defaultValue: ["x86_64", "i686"])
+    string(name: 'Versions', defaultValue: 'v1.1.18, v1.1.19, v1.1.20')
+    string(name: 'Build_types', defaultValue: 'Release, Debug')
+    string(name: 'Architectures', defaultValue: 'x86_64, i686')
   }
 
   stages {
@@ -28,9 +28,9 @@ pipeline {
           git branch: repo_branch, url: repo_url
           echo "$PATH"
           script {
-            def versions = ${params.Versions}
-            def architectures = ${params.Architectures}
-            def build_types = ${params.Build_types}
+            def versions = "${params.Versions}".replaceAll("\\s", "").split(',')
+            def architectures = "${params.Architectures}".replaceAll("\\s", "").split(',')
+            def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
 
             def builds = [:]
 
@@ -44,9 +44,9 @@ pipeline {
                       stage(buildName) {
                           sh """
                             echo "DEPENDENCY BUILD: creating binutils - (in future download binutils from local conan repo)"
-                            conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
+                          //  conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
                             echo "creating musl : ${versions}, build_type = ${build_types}"
-                            conan create conan/musl/${versions} ${conan_user}/${conan_channel} --settings build_type=${build_types}
+                          //  conan create conan/musl/${versions} ${conan_user}/${conan_channel} --settings build_type=${build_types}
                           """
 
                       }
