@@ -1,38 +1,57 @@
-
 def artifactory_name = "kristianj"
 def artifactory_repo = "includeos-develop"
-
 def repo_url = 'https://github.com/hioa-cs/IncludeOS.git'
 def repo_branch = 'conan'
 
 def conan_user = 'kristian'
 def conan_channel = 'demo'
 
-def recipe_location = 'gnu'
+pipeline {
+  agent {
+    label 'conan_pipe_worker'
+  }
 
-node ("conan_pipe_worker"){
+  parameters {
+    string(name: 'Versions', defaultValue: '2.31')
+    string(name: 'Build_types', defaultValue: 'Release, Debug')
+    string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
+    string(name: 'Target_OS', defaultValue: 'Linux')
+    string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386-toolchain, clang-6.0-linux-x86_64-toolchain, gcc-7.3.0-linux-i386-toolchain, gcc-8.2.0-linux-i386-toolchain, gcc-8.2.0-linux-x86_64-toolchain')
+  }
 
-   def server
-   def client
-   def serverNamelabel = "conan_pipe_worker"
+  stages {
+      stage('Build recipe - binutils') {
+        steps {
+          script {
+            def versions = "${params.Versions}"
+            def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
+            def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
+            def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
 
-    stage("Get project"){
-        //TODO replace with SCM snapshot.. if possible pull only the conan folder
-        git branch: repo_branch, url: repo_url
-        echo "$PATH"
-    }
+            def builds = [:]
 
-    stage("Build recipe - binutils"){
-          sh """
-            echo "creating binutils"
-            conan create conan/${recipe_location}/binutils/${binutils_version} ${conan_user}/${conan_channel}
-          """
-    }
+            for (prof in profiles) {
+              for (t_arch in target_architectures) {
+                for (build in build_types) {
+                  String buildName = "${build}-${versions}-${t_arch}-${prof}"
 
-    stage("Upload recipes to local library"){
-          sh """
-            echo "Uploading to local conan library"
+                  builds[buildName] = {
+                    node('conan_pipe_worker') {
+                        stage(buildName){
+                              sh """
+                                echo "creating binutils"
+                                conan create conan/gnu/binutils/${versions} ${conan_user}/${conan_channel}
 
-          """
-    }
+                              """
+                        }
+                    }
+                  }
+                }
+              }
+            }
+            parallel builds
+          }
+        }
+      }
+  }
 }
