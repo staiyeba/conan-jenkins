@@ -16,34 +16,36 @@ def build_type = ["Release", "Debug"]
 
 def version = ["v1.1.18", "v1.1.19"]
 
-node('conan-worker-1'){
+def projects = [" "," "]
+
+
     def server
     def client
     def serverNamelabel
 
     stage("Get project"){
+      node('conan-worker-1'){
 
         //TODO replace with SCM snapshot.. if possible pull only the conan folder
         git branch: repo_branch, url: repo_url
-        echo "$PATH"
+        echo "$PATH
+      }
     }
 
     stage("Build/Get binutils"){
-
+      node('conan_pipe_worker'){
         script {
             echo "should build or get binutils - turned off for now"
             // build job: "recipe-binutils" // builds binutils
         }
+      }
 
     }
 
-    // conan create conan/musl/${musl_version} ${conan_user}/${conan_channel} --settings build_type=Release
-
     stage("Build musl"){
-
-        script {
-
-            for(int i=0; i<build_type.size(); i++){
+        node ('conan_pipe_worker'){
+          script {
+            for(int i=0; i<=build_type.size(); i++){
                 def tasks = [:]
                 for(int j=0; j<build_type.size(); j++){
                     def build_ver = version[i]
@@ -57,10 +59,10 @@ node('conan-worker-1'){
                     }
 
                 }
-                parallel(tasks)
-            }
 
+            }
+          }
         }
 
     }
-}
+parallel projects
