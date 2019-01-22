@@ -38,8 +38,8 @@ pipeline {
                   builds[buildName] = {
                     node('conan-worker-2') {
                       stage(buildName) {
+                          git branch: repo_branch, url: repo_url
                           sh """
-                            git branch: repo_branch, url: repo_url
                             pwd
                             ls
                             echo "DEPENDENCY BUILD: creating binutils"
