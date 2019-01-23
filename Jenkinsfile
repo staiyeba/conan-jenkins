@@ -8,7 +8,7 @@ def conan_channel = 'demo'
 
 pipeline {
   agent {
-    label 'conan-worker-2'
+    label 'conan_pipe_worker'
   }
 
   // should create a library for these lists of values
