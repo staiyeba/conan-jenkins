@@ -8,7 +8,7 @@ def conan_channel = 'demo'
 
 pipeline {
   agent {
-    label 'conan_pipe_worker'
+    label 'conan-worker-2'
   }
 
   parameters {
@@ -36,12 +36,12 @@ pipeline {
                   String buildName = "${t_arch}-${prof}"
 
                   builds[buildName] = {
-                    node('conan_pipe_worker') {
+                    node('conan-worker-2') {
                         stage(buildName){
                               git branch: repo_branch, url: repo_url
                               sh """
                                 echo "creating binutils"
-                                conan create conan/gnu/binutils/${versions} ${conan_user}/${conan_channel}
+                                conan create conan/gnu/binutils/${versions} ${conan_user}/${conan_channel} -s compiler.version=${compiler_version}
 
                               """
                         }
