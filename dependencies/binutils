@@ -16,7 +16,8 @@ pipeline {
     string(name: 'Build_types', defaultValue: 'Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
-    string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386-toolchain, gcc-8.2.0-linux-i386-toolchain')
+    string(name: 'Profiles', defaultValue: 'clang-linux-i386-toolchain, gcc-linux-i386-toolchain')
+    string(name: 'CompilerVer', defaultValue: '6.0')
   }
 
   stages {
@@ -27,6 +28,7 @@ pipeline {
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
+            def compiler_version = "${params.CompilerVer}"
 
             def builds = [:]
 
@@ -40,9 +42,9 @@ pipeline {
                         stage(buildName){
                               git branch: repo_branch, url: repo_url
                               sh """
+                                sudo cp
                                 echo "creating binutils"
                                 conan create conan/gnu/binutils/${versions} ${conan_user}/${conan_channel} -s compiler.version=${compiler_version}
-
                               """
                         }
                     }
