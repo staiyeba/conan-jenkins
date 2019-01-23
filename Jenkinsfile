@@ -8,7 +8,7 @@ def conan_channel = 'demo'
 
 pipeline {
   agent {
-    label 'conan_pipe_worker'
+    label 'conan_worker'
   }
 
   // should create a library for these lists of values
@@ -40,13 +40,10 @@ pipeline {
                   String buildName = "${dependencies}-${versions}-${build}-${prof}"
 
                   builds[buildName] = {
-                    node('conan-worker-2') {
+                    node('conan_worker') {
                       stage(buildName) {
-                        build job: 'print-job',
-                          parameters: [
-                                  string(name: "Versions", value: "1.1.19"), // should be a variable from a list
-                                  string(name: "Build_types", value: "Debug") // build_type = Debug / Release
-                          ]
+                        build job: 'conan/recipe-musl',
+
                       }
                     }
                   }
