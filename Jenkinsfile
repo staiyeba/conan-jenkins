@@ -33,6 +33,8 @@ pipeline {
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
+            def compiler_version = "${params.CompilerVer}"
+
 
             def builds = [:]
 
