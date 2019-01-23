@@ -17,7 +17,7 @@ pipeline {
     string(name: 'Versions', defaultValue: 'v1.1.18')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
-    string(name: 'Target_OS', defaultValue: 'Linux, Macos')
+    string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64')
     string(name: 'ProfilesToolchain', defaultValue: 'clang-6.0-linux-i386-toolchain, clang-6.0-linux-x86_64-toolchain')
     // keeping compiler version out of this, assuming it will be part of the profiles
@@ -42,7 +42,7 @@ pipeline {
 
           for (prof_toolchain in profiles_toolchain) {
             for (prof in profiles) {
-              for (t_os in target_os) {
+          //    for (t_os in target_os) {
                 for (t_arch in target_architectures) {
                   for (build in build_types) {
                     String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
@@ -72,7 +72,7 @@ pipeline {
                     }
                   }
                 }
-              }
+          //    }
             }
           }
           parallel builds
