@@ -3,8 +3,8 @@ def artifactory_repo = "includeos-develop"
 def repo_url = 'https://github.com/hioa-cs/IncludeOS.git'
 def repo_branch = 'conan'
 
-def conan_user = 'kristian'
-def conan_channel = 'demo'
+def conan_user = 'includeos'
+def conan_channel = 'tools'
 
 pipeline {
   agent {
