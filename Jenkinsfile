@@ -38,7 +38,7 @@ pipeline {
 
             for (prof in profiles) {
               for (t_os in target_os) {
-                for (target_arch in target_architectures) {
+                for (t_arch in target_architectures) {
                   for (build in build_types) {
                     String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
 
@@ -51,7 +51,7 @@ pipeline {
                                   conan create conan/musl/${versions} \
                                   -s build_type=${build} \
                                   -s compiler.version=${compiler_version} \
-                                  -s arch=${target_arch} \
+                                  -s arch=${t_arch} \
                                   -s os=${t_os} \
                                   -pr ${prof} ${conan_user}/${conan_channel}
                                 """
