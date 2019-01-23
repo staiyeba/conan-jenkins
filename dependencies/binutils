@@ -17,7 +17,7 @@ pipeline {
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386-toolchain, clang-6.0-linux-x86_64-toolchain, gcc-7.3.0-linux-i386-toolchain, gcc-8.2.0-linux-i386-toolchain, gcc-8.2.0-linux-x86_64-toolchain')
-    string(name: 'CompilerVer', defaultValue: '6.0')
+    string(name: 'CompilerVer', defaultValue: '6')
   }
 
   stages {
