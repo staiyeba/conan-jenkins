@@ -17,7 +17,7 @@ pipeline {
     string(name: 'Versions', defaultValue: 'v1.1.18')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
-    string(name: 'Target_OS', defaultValue: 'Linux')
+//    string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64')
     string(name: 'ProfilesToolchain', defaultValue: 'clang-6.0-linux-i386-toolchain, clang-6.0-linux-x86_64-toolchain')
     // keeping compiler version out of this, assuming it will be part of the profiles
@@ -57,14 +57,14 @@ pipeline {
                                   -s compiler.version=${compiler_version} \
                                   -s build_type=${build} \
                                   -s arch=${t_arch} \
-                                  -s os=${t_os} \
+                              //    -s os=${t_os} \
                                   -pr ${prof_toolchain} ${conan_user}/${conan_channel}
 
                                   echo "creating ${dependencies}"
                                   conan create conan/musl/${versions} \
                                   -s build_type=${build} \
                                   -s arch=${t_arch} \
-                                  -s os=${t_os} \
+                            //      -s os=${t_os} \
                                   -pr ${prof} ${conan_user}/${conan_channel}
                                 """
                         }
