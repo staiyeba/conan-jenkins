@@ -18,9 +18,9 @@ pipeline {
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux, Macos')
-    string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64, gcc-8.2.0-linux-x86_64')
+    string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64')
     // keeping compiler version out of this, assuming it will be part of the profiles
-    def compiler_version = "${params.CompilerVer}"
+    string(name: 'CompilerVer', defaultValue: '6.0') //clang version
   }
 
   stages {
@@ -34,6 +34,7 @@ pipeline {
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
+            def compiler_version = "${params.CompilerVer}"
 
             def builds = [:]
 
@@ -49,12 +50,13 @@ pipeline {
                                 git branch: repo_branch, url: repo_url
                                 sh """
                                   echo "creating binutils"
-                                  conan create conan/gnu/binutils/${versions} \
+                                  conan create conan/gnu/binutils/2.31} \
                                   -s compiler.version=${compiler_version} \
                                   -s build_type=${build} \
                                   -s arch=${t_arch} \
                                   -s os=${t_os} \
                                   -pr ${prof} ${conan_user}/${conan_channel}
+
                                   echo "creating ${dependencies}"
                                   conan create conan/musl/${versions} \
                                   -s build_type=${build} \
