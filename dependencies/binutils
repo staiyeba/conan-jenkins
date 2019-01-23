@@ -25,6 +25,7 @@ pipeline {
         steps {
           script {
             def versions = "${params.Versions}"
+            def target_os = "${params.Target_OS}".replaceAll("\\s", "").split(',')
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
@@ -33,19 +34,25 @@ pipeline {
             def builds = [:]
 
             for (prof in profiles) {
-              for (t_arch in target_architectures) {
-                for (build in build_types) {
-                  String buildName = "${build}-${compiler_version}-${t_arch}-${prof}"
+              for (t_os in target_os) {
+                for (t_arch in target_architectures) {
+                  for (build in build_types) {
+                    String buildName = "${build}-${compiler_version}-${t_arch}-${prof}"
 
-                  builds[buildName] = {
-                    node('conan-worker-2') {
-                        stage(buildName){
-                              git branch: repo_branch, url: repo_url
-                              sh """
-                                echo "creating binutils"
-                                conan create conan/gnu/binutils/${versions} -s compiler.version=${compiler_version} -s arch=${t_arch} -pr ${prof} ${conan_user}/${conan_channel}
-                              """
-                        }
+                    builds[buildName] = {
+                      node('conan-worker-2') {
+                          stage(buildName){
+                                git branch: repo_branch, url: repo_url
+                                sh """
+                                  echo "creating binutils"
+                                  conan create conan/gnu/binutils/${versions} \
+                                  -s compiler.version=${compiler_version} \
+                                  -s arch=${t_arch} \
+                                  -s os=${t_os} \
+                                  -pr ${prof} ${conan_user}/${conan_channel}
+                                """
+                          }
+                      }
                     }
                   }
                 }
