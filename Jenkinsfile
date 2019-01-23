@@ -31,7 +31,7 @@ pipeline {
           script {
             def dependencies = "${params.Dependencies}"
             def versions = "${params.Versions}"
-            def target_os = "${params.Target_OS}".replaceAll("\\s", "").split(',')
+            def target_os = "${params.Target_OS}"
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
@@ -51,13 +51,7 @@ pipeline {
                         stage(buildName){
                                 git branch: repo_branch, url: repo_url
                                 sh """
-                                  echo "creating binutils"
-                                  conan create conan/gnu/binutils/2.31 \
-                                  -s compiler.version=${compiler_version} \
-                                  -s build_type=${build} \
-                                  -s arch=${t_arch} \
-                                  -s os=${target_os} \
-                                  -pr ${prof_toolchain} ${conan_user}/${conan_channel}
+                              
 
                                   echo "creating ${dependencies}"
                                   conan create conan/musl/${versions} \
