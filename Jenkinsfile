@@ -56,7 +56,7 @@ pipeline {
                                   -s compiler.version=${compiler_version} \
                                   -s build_type=${build} \
                                   -s arch=${t_arch} \
-                                  -s os=${t_os} \
+                                  -s os=${target_os} \
                                   -pr ${prof_toolchain} ${conan_user}/${conan_channel}
 
                                   echo "creating ${dependencies}"
