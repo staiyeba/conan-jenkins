@@ -13,8 +13,8 @@ pipeline {
 
   // should create a library for these lists of values
   parameters {
-    string(name: 'Dependencies', defaultValue: 'binutils')
-    string(name: 'Versions', defaultValue: '2.31')
+    string(name: 'Dependencies', defaultValue: 'musl')
+    string(name: 'Versions', defaultValue: 'v1.1.18')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
