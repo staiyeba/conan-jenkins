@@ -19,6 +19,7 @@ pipeline {
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux, Macos')
     string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64')
+    string(name: 'ProfilesToolchain', defaultValue: 'clang-6.0-linux-i386-toolchain, clang-6.0-linux-x86_64-toolchain')
     // keeping compiler version out of this, assuming it will be part of the profiles
     string(name: 'CompilerVer', defaultValue: '6.0') //clang version
   }
@@ -34,10 +35,12 @@ pipeline {
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
+            def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
             def compiler_version = "${params.CompilerVer}"
 
             def builds = [:]
 
+          for (prof_toolchain in profiles_toolchain) {
             for (prof in profiles) {
               for (t_os in target_os) {
                 for (t_arch in target_architectures) {
@@ -55,7 +58,7 @@ pipeline {
                                   -s build_type=${build} \
                                   -s arch=${t_arch} \
                                   -s os=${t_os} \
-                                  -pr ${prof} ${conan_user}/${conan_channel}
+                                  -pr ${prof_toolchain} ${conan_user}/${conan_channel}
 
                                   echo "creating ${dependencies}"
                                   conan create conan/musl/${versions} \
@@ -71,7 +74,8 @@ pipeline {
                 }
               }
             }
-            parallel builds
+          }
+          parallel builds
           }
         }
       }
