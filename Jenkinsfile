@@ -42,7 +42,7 @@ pipeline {
                   builds[buildName] = {
                     node('conan-worker-2') {
                       stage(buildName) {
-                        build job: 'recipe-musl',
+                        build job: 'conan/recipe-musl',
                           parameters: [
                                   string(name: "Versions", value: "1.1.19"), // should be a variable from a list
                                   string(name: "build_type", value: "Debug") // build_type = Debug / Release
