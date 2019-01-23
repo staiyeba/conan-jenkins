@@ -13,7 +13,7 @@ pipeline {
 
   parameters {
     string(name: 'Versions', defaultValue: '2.31')
-    string(name: 'Build_types', defaultValue: 'Debug')
+    string(name: 'Build_types', defaultValue: 'Debug, Release')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: 'clang-linux-i386-toolchain, gcc-linux-i386-toolchain')
