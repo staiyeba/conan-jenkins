@@ -41,12 +41,11 @@ pipeline {
 
                   builds[buildName] = {
                     node('conan-worker-2') {
-                      stage(buildName) {
-                          git branch: repo_branch, url: repo_url
-                          sh """
-                            echo "creating ${dependencies} : ${versions} build_type = ${build} HOST os arch_target = ${target_arch}"
-                            conan create conan/${dependencies}/${versions} ${conan_user}/${conan_channel} -pr ${prof} -s build_type=${build}
-                          """
+                      stage(buildName) { -> build job: "recipe-musl",
+                          parameters: [
+                                  string(name: "Versions", value: ${versions}), // should be a variable from a list
+                                  string(name: "build_type", value: ${build}) // build_type = Debug / Release
+                          ]
                       }
                     }
                   }
