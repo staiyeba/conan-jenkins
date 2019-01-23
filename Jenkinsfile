@@ -50,7 +50,7 @@ pipeline {
                                 git branch: repo_branch, url: repo_url
                                 sh """
                                   echo "creating binutils"
-                                  conan create conan/gnu/binutils/2.31} \
+                                  conan create conan/gnu/binutils/2.31 \
                                   -s compiler.version=${compiler_version} \
                                   -s build_type=${build} \
                                   -s arch=${t_arch} \
