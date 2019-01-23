@@ -31,7 +31,7 @@ pipeline {
           script {
             def dependencies = "${params.Dependencies}"
             def versions = "${params.Versions}"
-            def target_os = "${params.Target_OS}".replaceAll("\\s", "").split(',')
+        //    def target_os = "${params.Target_OS}".replaceAll("\\s", "").split(',')
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
