@@ -42,7 +42,7 @@ pipeline {
                   builds[buildName] = {
                     node('conan_worker') {
                       stage(buildName) {
-                        build job: 'conan/recipe-musl',
+                        build job: 'conan/recipe-musl'
 
                       }
                     }
