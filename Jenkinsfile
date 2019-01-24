@@ -33,12 +33,31 @@ pipeline {
             def dependencies = "${params.Dependencies}"
             def versions = "${params.Versions}"
             def target_os = "${params.Target_OS}"
-            def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
-            def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
-            def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
-            def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
             def compiler_version = "${params.CompilerVer}"
             def dep_location = "${params.DepLocation}"
+
+            if (("${params.Target_Architectures}").size() > 1 ) {
+              def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
+            } else {
+              def target_architectures = "${params.Target_Architectures}"
+            }
+            if (("${params.Build_types}").size() > 1 ) {
+              def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
+            } else {
+              def build_types = "${params.Build_types}"
+            }
+            if (("${params.Profiles}").size() > 1 ) {
+              def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
+            } else {
+              def profiles = "${params.Profiles}"
+            }
+            if (("${params.ProfilesToolchain}").size() > 1 ) {
+              def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
+            } else {
+              def profiles_toolchain = "${params.ProfilesToolchain}"
+            }
+
+
             currentBuild.description = "branch: ${BRANCH}, building: ${dependencies}"
             def builds = [:]
 
