@@ -4,7 +4,7 @@ def repo_url = 'https://github.com/hioa-cs/IncludeOS.git'
 def repo_branch = 'conan'
 
 def conan_user = 'includeos'
-def conan_channel = 'test'
+def conan_channel = 'tools'
 
 pipeline {
   agent {
