@@ -36,28 +36,12 @@ pipeline {
             def compiler_version = "${params.CompilerVer}"
             def dep_location = "${params.DepLocation}"
 
-            if (("${params.Target_Architectures}").size() > 0 ) {
-              def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
-            } else {
-              def target_architectures = "${params.Target_Architectures}"
-            }
-            if (("${params.Build_types}").size() > 0 ) {
-              def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
-            } else {
-              def build_types = "${params.Build_types}"
-            }
-            if (("${params.Profiles}").size() > 0 ) {
-              def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
-            } else {
-              def profiles = "${params.Profiles}"
-            }
-            if (("${params.ProfilesToolchain}").size() > 0 ) {
-              def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
-            } else {
-              def profiles_toolchain = "${params.ProfilesToolchain}"
-            }
 
-
+            def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
+            def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
+            def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
+            def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
+            
             currentBuild.description = "branch: ${GIT_BRANCH}, building: ${dependencies}"
             def builds = [:]
 
@@ -77,7 +61,7 @@ pipeline {
                                     -s compiler.version=${compiler_version} \
                                     -s build_type=${build} \
                                     -s arch=${t_arch} \
-                                    -pr ${profiles_toolchain} ${conan_user}/${conan_channel}
+                                    -pr ${prof} ${conan_user}/${conan_channel}
 
                                     if [ -z "${dep_location}" ];
                                     then
