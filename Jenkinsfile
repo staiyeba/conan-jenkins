@@ -42,38 +42,45 @@ pipeline {
 
             def builds = [:]
 
-          for (prof_toolchain in profiles_toolchain) {
-            for (prof in profiles) {
-                for (t_arch in target_architectures) {
-                  for (build in build_types) {
-                    String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
 
-                    builds[buildName] = {
-                      node('conan-worker-2') {
-                        stage(buildName){
-                                git branch: repo_branch, url: repo_url
-                                sh """
-                                  echo "creating binutils"
-                                  conan create conan/gnu/binutils/2.31 \
-                                  -s compiler.version=${compiler_version} \
-                                  -s build_type=${build} \
-                                  -s arch=${t_arch} \
-                                  -s os=${target_os} \
-                                  -pr ${prof_toolchain} ${conan_user}/${conan_channel}
+            for (prof_toolchain in profiles_toolchain) {
+              for (prof in profiles) {
+                  for (t_arch in target_architectures) {
+                    for (build in build_types) {
+                      String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
+                      builds[buildName] = {
+                        node('conan-worker-2') {
+                          stage(buildName){
+                                  git branch: repo_branch, url: repo_url
+                                  sh """
+                                    echo "creating binutils"
+                                    conan create conan/gnu/binutils/2.31 \
+                                    -s compiler.version=${compiler_version} \
+                                    -s build_type=${build} \
+                                    -s arch=${t_arch} \
+                                    -s os=${target_os} \
+                                    -pr ${prof_toolchain} ${conan_user}/${conan_channel}
 
-                                  echo "creating ${dependencies}"
-                                  conan create conan/${dep_location}${dependencies}/${versions} \
-                                  -s build_type=${build} \
-                                  -pr ${prof} ${conan_user}/${conan_channel}
-                                """
+                                    if (${dep_location}) {
+                                      echo "creating ${dependencies}"
+                                      conan create conan/${dependencies}/${versions} \
+                                      -s build_type=${build} \
+                                      -pr ${prof} ${conan_user}/${conan_channel}
+                                    } else {
+                                      echo "creating ${dependencies}"
+                                      conan create conan/${dep_location}/${dependencies}/${versions} \
+                                      -s build_type=${build} \
+                                      -pr ${prof} ${dependencies}/${versions}${conan_user}/${conan_channel}
+                                    }
+                                  """
+                          }
                         }
                       }
                     }
                   }
-                }
+              }
             }
-          }
-          parallel builds
+            parallel builds
           }
         }
       }
