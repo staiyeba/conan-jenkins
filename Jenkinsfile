@@ -53,14 +53,6 @@ pipeline {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
-                                    echo "creating binutils"
-                                    conan create conan/gnu/binutils/2.31 \
-                                    -s compiler.version=${compiler_version} \
-                                    -s build_type=${build} \
-                                    -s arch=${t_arch} \
-                                    -s os=${target_os} \
-                                    -pr ${prof_toolchain} ${conan_user}/${conan_channel}
-
                                     if (${dep_location}) {
                                       echo "creating ${dependencies}"
                                       conan create conan/${dependencies}/${versions} \
