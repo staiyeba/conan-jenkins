@@ -24,6 +24,10 @@ pipeline {
       stage('Build recipe - binutils') {
         steps {
           script {
+            currentBuild.description = "branch: ${GIT_BRANCH}, building: Binutils-${versions} \
+                                        build_type: ${build_types} \
+                                        profile: ${profiles}"
+
             def versions = "${params.Versions}"
             def target_os = "${params.Target_OS}".replaceAll("\\s", "").split(',')
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
