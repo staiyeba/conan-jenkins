@@ -46,8 +46,6 @@ pipeline {
                                           build_type: ${build_types} \
                                           profile: ${profiles}"
             def builds = [:]
-            def conanfile_list = [:]
-
 
             for (prof_toolchain in profiles_toolchain) {
               for (prof in profiles) {
@@ -59,11 +57,11 @@ pipeline {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
-
-                                    ${conanfile_list} = (find . -type f -name "conanfile.py")
-
-                                    echo ${conanfile_list}
-
+                                    conanfile_list = ()
+                                    for file in "`find . -type f -name "conanfile.py"`"; do
+                                      $conanfile_list = $file
+                                      echo $conanfile_list
+                                    done
                                   """
                           }
                         }
