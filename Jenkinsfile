@@ -14,6 +14,7 @@ pipeline {
   // should create a library for these lists of values
   parameters {
     string(name: 'Dependencies', defaultValue: 'musl')
+    string(name: 'DepLocation', defaultValue: '')
     string(name: 'Versions', defaultValue: 'v1.1.18')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
@@ -37,6 +38,7 @@ pipeline {
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
             def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
             def compiler_version = "${params.CompilerVer}"
+            def dep_location = "${params.DepLocation}"
 
             def builds = [:]
 
@@ -60,7 +62,7 @@ pipeline {
                                   -pr ${prof_toolchain} ${conan_user}/${conan_channel}
 
                                   echo "creating ${dependencies}"
-                                  conan create conan/musl/${versions} \
+                                  conan create conan/${dep_location}${dependencies}/${versions} \
                                   -s build_type=${build} \
                                   -pr ${prof} ${conan_user}/${conan_channel}
                                 """
