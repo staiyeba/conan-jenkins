@@ -53,16 +53,16 @@ pipeline {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
-                                    if ["${dep_location}"] then
-                                      echo "creating ${dependencies}"
-                                      conan create conan/${dep_location}/${dependencies} \
-                                      -s build_type=${build} \
-                                      -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
-                                    else
+                                    if [ -z "${dep_location}" ] then
                                       echo "creating ${dependencies}"
                                       conan create conan/${dependencies}/${versions} \
                                       -s build_type=${build} \
                                       -pr ${prof} ${conan_user}/${conan_channel}
+                                    else
+                                      echo "creating ${dependencies}"
+                                      conan create conan/${dep_location}/${dependencies} \
+                                      -s build_type=${build} \
+                                      -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
                                     fi
                                   """
                           }
