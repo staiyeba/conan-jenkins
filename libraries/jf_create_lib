@@ -57,10 +57,8 @@ pipeline {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
-                                    conanfile_list = ()
-                                    for file in "`find . -type f -name "conanfile.py"`"; do
-                                      $conanfile_list = $file
-                                      echo $conanfile_list
+                                    for file in "`find ${dependencies} -type f -name "conanfile.py"`"; do
+                                      print $file
                                     done
                                   """
                           }
