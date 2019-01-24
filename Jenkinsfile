@@ -77,7 +77,7 @@ pipeline {
                                     -s compiler.version=${compiler_version} \
                                     -s build_type=${build} \
                                     -s arch=${t_arch} \
-                                    -pr ${prof} ${conan_user}/${conan_channel}
+                                    -pr ${profiles_toolchain} ${conan_user}/${conan_channel}
 
                                     if [ -z "${dep_location}" ];
                                     then
