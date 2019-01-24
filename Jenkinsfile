@@ -68,9 +68,9 @@ pipeline {
                                       -pr ${prof} ${conan_user}/${conan_channel}
                                     } else {
                                       echo "creating ${dependencies}"
-                                      conan create conan/${dep_location}/${dependencies}/${versions} \
+                                      conan create conan/${dep_location}/${dependencies} \
                                       -s build_type=${build} \
-                                      -pr ${prof} ${dependencies}/${versions}${conan_user}/${conan_channel}
+                                      -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
                                     }
                                   """
                           }
