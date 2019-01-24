@@ -60,10 +60,10 @@ pipeline {
                                   git branch: repo_branch, url: repo_url
                                   sh """
 
-                                    ${conan_file} = (find . -type f -name "conanfile.py")
+                                    ${conanfile_list} = (find . -type f -name "conanfile.py")
 
-                                    echo ${conan_file}
-                                    
+                                    echo ${conanfile_list}
+
                                   """
                           }
                         }
