@@ -71,7 +71,7 @@ pipeline {
                                       conan create conan/${dependencies}/${versions} \
                                       -s build_type=${build} \
                                       -pr ${prof} ${conan_user}/${conan_channel}
-                                    else if [ -n "${dep_location}" ];
+                                    elif [ -n "${dep_location}" ];
                                     then
                                       echo "creating ${dep_location}/${dependencies}"
                                       conan create conan/${dep_location}/${dependencies} \
