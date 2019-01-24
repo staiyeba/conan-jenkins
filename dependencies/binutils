@@ -8,7 +8,7 @@ def conan_channel = 'tools'
 
 pipeline {
   agent {
-    label 'conan-worker-2'
+    label 'conan_worker'
   }
 
   parameters {
@@ -40,7 +40,7 @@ pipeline {
                     String buildName = "${build}-${t_arch}-${prof}"
 
                     builds[buildName] = {
-                      node('conan-worker-2') {
+                      node('conan_worker') {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
