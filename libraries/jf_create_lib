@@ -46,6 +46,7 @@ pipeline {
                                           build_type: ${build_types} \
                                           profile: ${profiles}"
             def builds = [:]
+            def conanfile_list = [:]
 
 
             for (prof_toolchain in profiles_toolchain) {
@@ -65,24 +66,12 @@ pipeline {
                                     -s arch=${t_arch} \
                                     -pr ${prof} ${conan_user}/${conan_channel}
 
-                                    if [ -z "${dep_location}" ];
-                                    then
-                                      echo "creating ${dependencies}"
-                                      conan create conan/${dependencies}/${versions} \
-                                      -s build_type=${build} \
-                                      -pr ${prof} ${conan_user}/${conan_channel}
-                                    elif [ -n "${dep_location}" ];
-                                    then
-                                      echo "creating ${dep_location}/${dependencies}"
-                                      conan create conan/${dep_location}/${dependencies} \
-                                      -s build_type=${build} \
-                                      -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
-                                    else
-                                      echo "creating ${dependencies}"
-                                      conan create conan/${dependencies} \
-                                      -s build_type=${build} \
-                                      -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
-                                    fi
+                                    ${conan_file} = (find . -type f -name "conanfile.py")
+
+                                    echo ${conan_file}
+
+
+                                    
                                   """
                           }
                         }
