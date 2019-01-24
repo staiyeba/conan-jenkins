@@ -8,7 +8,7 @@ def conan_channel = 'tools'
 
 pipeline {
   agent {
-    label 'conan-worker-1'
+    label 'conan_pipe_worker'
   }
 
   // should create a library for these lists of values
@@ -54,7 +54,7 @@ pipeline {
                     for (build in build_types) {
                       String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
                       builds[buildName] = {
-                        node('conan-worker-1') {
+                        node('conan_pipe_worker') {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
