@@ -41,8 +41,10 @@ pipeline {
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
             def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
-            
-            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${dependencies}"
+
+            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${dependencies}/${versions} \
+                                          build_type: ${build_types} \
+                                          profile: ${profiles}"
             def builds = [:]
 
 
