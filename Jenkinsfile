@@ -39,7 +39,7 @@ pipeline {
             def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
             def compiler_version = "${params.CompilerVer}"
             def dep_location = "${params.DepLocation}"
-            currentBuild.description = "#${BUILD_NUMBER}, branch ${dependencies}"
+            currentBuild.description = "branch: ${BRANCH}, building: ${dependencies}"
             def builds = [:]
 
 
