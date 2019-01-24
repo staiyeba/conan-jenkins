@@ -58,7 +58,7 @@ pipeline {
             }
 
 
-            currentBuild.description = "branch: ${BRANCH_NAME}, building: ${dependencies}"
+            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${dependencies}"
             def builds = [:]
 
 
