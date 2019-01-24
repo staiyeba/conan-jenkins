@@ -36,22 +36,22 @@ pipeline {
             def compiler_version = "${params.CompilerVer}"
             def dep_location = "${params.DepLocation}"
 
-            if (("${params.Target_Architectures}").size() > 1 ) {
+            if (("${params.Target_Architectures}").size() > 0 ) {
               def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             } else {
               def target_architectures = "${params.Target_Architectures}"
             }
-            if (("${params.Build_types}").size() > 1 ) {
+            if (("${params.Build_types}").size() > 0 ) {
               def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             } else {
               def build_types = "${params.Build_types}"
             }
-            if (("${params.Profiles}").size() > 1 ) {
+            if (("${params.Profiles}").size() > 0 ) {
               def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
             } else {
               def profiles = "${params.Profiles}"
             }
-            if (("${params.ProfilesToolchain}").size() > 1 ) {
+            if (("${params.ProfilesToolchain}").size() > 0 ) {
               def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
             } else {
               def profiles_toolchain = "${params.ProfilesToolchain}"
