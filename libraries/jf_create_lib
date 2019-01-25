@@ -62,10 +62,7 @@ pipeline {
 
                                       if [ -z "${dep_location}" ];
                                       then
-                                        conan_file = `find conan/${dependencies}/${versions} -type f -name "conanfile.py"`
-                                        echo "${conan_file}"
-                                        echo "${conan_file}" | grep -q "${versions}" && echo "${versions}"
-                                        if [ echo "${conan_file}" | grep -q "${versions}" ];
+                                        if [ -d "conan/${dependencies}/${versions}" ];
                                         then
                                           echo "creating ${dependencies}/${versions}"
                                         else
