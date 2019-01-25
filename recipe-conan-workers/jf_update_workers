@@ -58,7 +58,7 @@ pipeline {
                         String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
 
                         builds[buildName] = {
-                          node('conan_pipe_worker') {
+                          node('${w}') {
                             stage(buildName){
                                     git branch: repo_branch, url: repo_url
                                     sh """
