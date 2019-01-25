@@ -65,12 +65,9 @@ pipeline {
                                       -s arch=${t_arch} \
                                       -pr ${prof} ${conan_user}/${conan_channel}
 
-
-
-
                                       if [ -z "${dep_location}" ];
                                       then
-                                        conan_file = `find conan/${dependencies}/ -type f -name "conanfile.py"`
+                                        conan_file = `find conan/${dependencies}/${versions} -type f -name "conanfile.py"`
                                         if [ echo "$conan_file" | grep -q "${versions}" ];
                                         then
                                           echo "creating ${dependencies}"
