@@ -59,18 +59,33 @@ pipeline {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
+                                      echo "creating binutils"
+                                      conan create conan/gnu/binutils/2.31 \
+                                      -s compiler.version=${compiler_version} \
+                                      -s build_type=${build} \
+                                      -s arch=${t_arch} \
+                                      -pr ${prof} ${conan_user}/${conan_channel}
 
                                       if [ -z "${dep_location}" ];
                                       then
                                         if [ -d "conan/${dependencies}/${versions}" ];
                                         then
                                           echo "creating ${dependencies}/${versions}"
+                                          conan create conan/${dependencies}/${versions} \
+                                          -s build_type=${build} \
+                                          -pr ${prof} ${conan_user}/${conan_channel}
                                         else
                                           echo "creating ${dependencies}"
+                                          conan create conan/${dependencies} \
+                                          -s build_type=${build} \
+                                          -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
                                         fi
                                       elif [ -n "${dep_location}" ];
                                       then
                                         echo "creating ${dep_location}/${dependencies}"
+                                        conan create conan/${dep_location}/${dependencies} \
+                                        -s build_type=${build} \
+                                        -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
                                       fi
                                   """
                           }
