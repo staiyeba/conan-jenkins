@@ -46,7 +46,7 @@ pipeline {
                                           build_type: ${build_types} \
                                           profile: ${profiles}"
             def builds = [:]
-            def conan_file
+            def conan_file = ()
 
             for (prof_toolchain in profiles_toolchain) {
               for (prof in profiles) {
