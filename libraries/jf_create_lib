@@ -46,14 +46,14 @@ pipeline {
                                           build_type: ${build_types} \
                                           profile: ${profiles}"
             def builds = [:]
-
+            def conan_file
 
             for (prof_toolchain in profiles_toolchain) {
               for (prof in profiles) {
                   for (t_arch in target_architectures) {
                     for (build in build_types) {
                       String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
-                      String conan_file
+
                       builds[buildName] = {
                         node('conan_pipe_worker') {
                           stage(buildName){
