@@ -47,8 +47,8 @@ pipeline {
 
               for (prof in profiles) {
                   for (arch in target_architectures) {
-
-                    if (arch == "${ conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d= }");
+                    get_built_arch = $(conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d=)
+                    if (arch = "${get_built_arch}");
                     then
                         t_arch = arch
                     fi
