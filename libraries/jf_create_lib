@@ -49,13 +49,11 @@ pipeline {
             def conan_file
             // gets only the taget arch defined inside the profile
 
-            get_defined_arch = $(conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d= )
-
             for (prof_toolchain in profiles_toolchain) {
               for (prof in profiles) {
                   for (arch in target_architectures) {
 
-                    if [ "${arch}" = ${get_defined_arch}" ]; // to ensure that it is build for what is in the profile only
+                    if [ "${arch}" = ${conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d= }" ]; // to ensure that it is build for what is in the profile only
                     then
                         t_arch = arch
                     fi
