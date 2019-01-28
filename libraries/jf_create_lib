@@ -13,8 +13,8 @@ pipeline {
 
   // should create a library for these lists of values
   parameters {
-    string(name: 'Dependencies', defaultValue: 'musl')
-    string(name: 'DepLocation', defaultValue: '')
+    string(name: 'Libraries', defaultValue: 'musl')
+    string(name: 'LibLocation', defaultValue: '')
     string(name: 'Versions', defaultValue: 'v1.1.18')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
@@ -29,16 +29,16 @@ pipeline {
         steps {
           // should check if size of parameter is one, then no need to remove quotations
           script {
-            def dependencies = "${params.Dependencies}"
+            def libraries = "${params.Libraries}"
             def versions = "${params.Versions}"
             def target_os = "${params.Target_OS}"
             def compiler_version = "${params.CompilerVer}"
-            def dep_location = "${params.DepLocation}"
+            def lib_location = "${params.LibLocation}"
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
 
-            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${dependencies}/${versions} \
+            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${libraries}/${versions} \
                                           build_type: ${build_types} \
                                           profile: ${profiles}"
             def builds = [:]
@@ -55,33 +55,33 @@ pipeline {
                   //  fi
 
                     for (build in build_types) {
-                      String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
+                      String buildName = "${libraries}-${build}-${t_arch}-${prof}"
 
                       builds[buildName] = {
                         node('conan_pipe_worker') {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
-                                      if [ -z "${dep_location}" ];
+                                      if [ -z "${lib_location}" ];
                                       then
-                                        if [ -d "conan/${dependencies}/${versions}" ];
+                                        if [ -d "conan/${libraries}/${versions}" ];
                                         then
-                                          echo "creating ${dependencies}/${versions}"
-                                          conan create conan/${dependencies}/${versions} \
+                                          echo "creating ${libraries}/${versions}"
+                                          conan create conan/${libraries}/${versions} \
                                           -s build_type=${build} \
                                           -pr ${prof} ${conan_user}/${conan_channel}
                                         else
-                                          echo "creating ${dependencies}"
-                                          conan create conan/${dependencies} \
+                                          echo "creating ${libraries}"
+                                          conan create conan/${libraries} \
                                           -s build_type=${build} \
-                                          -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
+                                          -pr ${prof} ${libraries}/${versions}@${conan_user}/${conan_channel}
                                         fi
-                                      elif [ -n "${dep_location}" ];
+                                      elif [ -n "${lib_location}" ];
                                       then
-                                        echo "creating ${dep_location}/${dependencies}"
-                                        conan create conan/${dep_location}/${dependencies} \
+                                        echo "creating ${lib_location}/${libraries}"
+                                        conan create conan/${lib_location}/${libraries} \
                                         -s build_type=${build} \
-                                        -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel}
+                                        -pr ${prof} ${libraries}/${versions}@${conan_user}/${conan_channel}
                                       fi
                                   """
                           }
