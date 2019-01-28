@@ -53,7 +53,7 @@ pipeline {
               for (prof in profiles) {
                   for (arch in target_architectures) {
 
-                    if [ "${arch}" = ${conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d= }" ]; // to ensure that it is build for what is in the profile only
+                    if [ "${arch}" = ${conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d= }" ];
                     then
                         t_arch = arch
                     fi
