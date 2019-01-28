@@ -44,15 +44,15 @@ pipeline {
             def builds = [:]
             def conan_file
             // gets only the taget arch defined inside the profile
-            def get_built_arch = `conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d=`
+            // def get_built_arch = `conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d=`
 
               for (prof in profiles) {
                   for (arch in target_architectures) {
 
-                    if (arch = "${get_built_arch}");
-                    then
-                        t_arch = arch
-                    fi
+              //      if (arch = "${get_built_arch}");
+                //    then
+                  //      t_arch = arch
+                  //  fi
 
                     for (build in build_types) {
                       String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
