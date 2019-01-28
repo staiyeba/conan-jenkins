@@ -55,9 +55,9 @@ pipeline {
               for (prof in profiles) {
                   for (arch in target_architectures) {
 
-                    if [ "${arch}" = ${get_defined_arch}" ];
+                    if [ "${arch}" = ${get_defined_arch}" ]; // to ensure that it is build for what is in the profile only
                     then
-                //        t_arch = arch
+                        t_arch = arch
                     fi
 
                     for (build in build_types) {
