@@ -20,7 +20,6 @@ pipeline {
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64')
-    string(name: 'ProfilesToolchain', defaultValue: 'clang-6.0-linux-i386-toolchain, clang-6.0-linux-x86_64-toolchain')
     // keeping compiler version out of this, assuming it will be part of the profiles
     string(name: 'CompilerVer', defaultValue: '6.0') //clang version
   }
@@ -40,15 +39,12 @@ pipeline {
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
-            def profiles_toolchain = "${params.ProfilesToolchain}".replaceAll("\\s", "").split(',')
 
             currentBuild.description = "branch: ${GIT_BRANCH}, building: ${dependencies}/${versions} \
                                           build_type: ${build_types} \
                                           profile: ${profiles}"
             def builds = [:]
-            def conan_file
 
-            for (prof_toolchain in profiles_toolchain) {
               for (prof in profiles) {
                   for (t_arch in target_architectures) {
                     for (build in build_types) {
@@ -87,7 +83,6 @@ pipeline {
                     }
                   }
               }
-            }
             parallel builds
           }
         }
