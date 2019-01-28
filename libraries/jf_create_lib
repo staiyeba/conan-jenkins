@@ -49,7 +49,7 @@ pipeline {
             def conan_file
             // gets only the taget arch defined inside the profile
 
-            sh "get_defined_arch = $( conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d= )"
+            sh "get_defined_arch = $(conan profile show ${profiles} | grep "arch_build=*" | cut -f2 -d= )
 
             for (prof_toolchain in profiles_toolchain) {
               for (prof in profiles) {
