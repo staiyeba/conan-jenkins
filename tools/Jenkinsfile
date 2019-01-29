@@ -13,6 +13,9 @@ pipeline {
 
   // should create a library for these lists of values
   parameters {
+    string(name: 'Tools', defaultValue: '')
+    string(name: 'ToolLocation', defaultValue: '')
+    string(name: 'Versions', defaultValue: '2.31')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
@@ -26,18 +29,18 @@ pipeline {
         steps {
           // should check if size of parameter is one, then no need to remove quotations
           script {
-            def dependencies = "${params.Dependencies}"
+            def tools = "${params.Tools}"
             def versions = "${params.Versions}"
             def target_os = "${params.Target_OS}"
             def compiler_version = "${params.CompilerVer}"
-            def dep_location = "${params.DepLocation}"
+            def tool_loc = "${params.ToolLocation}"
 
 
             def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
 
-            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${dependencies}/${versions} \
+            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${tools}/${versions} \
                                           build_type: ${build_types} \
                                           profile: ${profiles}"
             def builds = [:]
@@ -45,33 +48,33 @@ pipeline {
               for (prof in profiles) {
                   for (t_arch in target_architectures) {
                     for (build in build_types) {
-                      String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
+                      String buildName = "${tools}-${build}-${t_arch}-${prof}"
 
                       builds[buildName] = {
                         node('conan_pipe_worker') {
                           stage(buildName){
                                   git branch: repo_branch, url: repo_url
                                   sh """
-                                      if [ -z "${dep_location}" ];
+                                      if [ -z "${tool_loc}" ];
                                       then
-                                        if [ -d "conan/${dependencies}/${versions}" ];
+                                        if [ -d "conan/${tools}/${versions}" ];
                                         then
-                                          echo "creating ${dependencies}/${versions}"
-                                          conan create conan/${dependencies}/${versions} \
+                                          echo "creating ${tools}/${versions}"
+                                          conan create conan/${tools}/${versions} \
                                           -s build_type=${build} \
                                           -pr ${prof} ${conan_user}/${conan_channel} --build missing
                                         else
-                                          echo "creating ${dependencies}"
-                                          conan create conan/${dependencies} \
+                                          echo "creating ${tools}"
+                                          conan create conan/${tools} \
                                           -s build_type=${build} \
-                                          -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel} --build missing
+                                          -pr ${prof} ${tools}/${versions}@${conan_user}/${conan_channel} --build missing
                                         fi
-                                      elif [ -n "${dep_location}" ];
+                                      elif [ -n "${tool_loc}" ];
                                       then
-                                        echo "creating ${dep_location}/${dependencies}"
-                                        conan create conan/${dep_location}/${dependencies} \
+                                        echo "creating ${tool_loc}/${tools}"
+                                        conan create conan/${tool_loc}/${tools} \
                                         -s build_type=${build} \
-                                        -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel} --build missing
+                                        -pr ${prof} ${tools}/${versions}@${conan_user}/${conan_channel} --build missing
                                       fi
                                   """
                           }
