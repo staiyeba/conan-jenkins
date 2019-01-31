@@ -59,11 +59,13 @@ pipeline {
                                           echo "creating ${dependencies}/${versions}"
                                           conan create conan/${dependencies}/${versions} \
                                           -s build_type=${build} \
+                                          -s arch=${t_arch} \
                                           -pr ${prof} ${conan_user}/${conan_channel} --build missing
                                         else
                                           echo "creating ${dependencies}"
                                           conan create conan/${dependencies} \
                                           -s build_type=${build} \
+                                          -s arch=${t_arch} \
                                           -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel} --build missing
                                         fi
                                       elif [ -n "${dep_location}" ];
@@ -71,6 +73,7 @@ pipeline {
                                         echo "creating ${dep_location}/${dependencies}"
                                         conan create conan/${dep_location}/${dependencies} \
                                         -s build_type=${build} \
+                                        -s arch=${t_arch} \
                                         -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel} --build missing
                                       fi
                                   """
