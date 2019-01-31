@@ -39,7 +39,7 @@ pipeline {
 
             currentBuild.description = "building: ${dependencies}/${versions} \
                                           branch: ${GIT_BRANCH} \
-                                          profiles: {profiles}"
+                                          profiles: ${profiles}"
             def builds = [:]
 
               for (prof in profiles) {
