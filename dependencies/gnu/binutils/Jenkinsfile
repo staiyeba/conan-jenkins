@@ -18,7 +18,7 @@ pipeline {
     string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: '')
   }
-
+
   stages {
       stage('Build recipe - binutils') {
         steps {
