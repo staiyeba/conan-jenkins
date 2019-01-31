@@ -37,8 +37,9 @@ pipeline {
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
 
-            currentBuild.description = "profile: ${profiles}, building: ${dependencies}/${versions} \
-                                          branch: ${GIT_BRANCH}"
+            currentBuild.description = "building: ${dependencies}/${versions} \
+                                          branch: ${GIT_BRANCH} \
+                                          profiles: {profiles}"
             def builds = [:]
 
               for (prof in profiles) {
