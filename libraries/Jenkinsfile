@@ -38,9 +38,11 @@ pipeline {
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
 
-            currentBuild.description = "branch: ${GIT_BRANCH}, building: ${libraries}/${versions} \
+            currentBuild.description = "${libraries}/${versions} \
+                                          profile: ${profiles} \
                                           build_type: ${build_types} \
-                                          profile: ${profiles}"
+                                          branch: ${GIT_BRANCH}
+                                          "
             def builds = [:]
             def conan_file
             // gets only the taget arch defined inside the profile
