@@ -13,9 +13,9 @@ pipeline {
 
   // should create a library for these lists of values
   parameters {
-    string(name: 'Libraries', defaultValue: 'musl')
+    string(name: 'Libraries', defaultValue: '')
     string(name: 'LibLocation', defaultValue: '')
-    string(name: 'Versions', defaultValue: 'v1.1.18')
+    string(name: 'Versions', defaultValue: '')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
