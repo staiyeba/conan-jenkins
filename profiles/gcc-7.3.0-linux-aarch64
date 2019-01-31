@@ -1,0 +1,17 @@
+[settings]
+os=Linux
+os_build=Linux
+arch=armv8
+arch_build=x86_64
+compiler=gcc
+compiler.version=7
+compiler.libcxx=libstdc++11
+build_type=Release
+[options]
+[build_requires]
+*: binutils/2.31@includeos/test
+[env]
+CC=aarch64-unknown-linux-gnu-gcc-7.3.0
+CXX=aarch64-unknown-linux-gnu-g++-7.3.0
+CFLAGS=-mcpu=cortex-a53
+CXXFLAGS=-mcpu=cortex-a53
