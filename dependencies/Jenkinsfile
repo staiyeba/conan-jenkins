@@ -23,6 +23,16 @@ pipeline {
   }
 
   stages {
+      stage('Checking Binutils') {
+        steps {
+          script {
+            sh """
+              echo "check if binutils is available in ${conan_user}/${conan_channel}"
+              echo "command to be executed: conan install ... "
+            """
+          }
+        }
+      }
       stage('Build') {
         steps {
           // should check if size of parameter is one, then no need to remove quotations
