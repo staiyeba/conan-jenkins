@@ -36,8 +36,7 @@ pipeline {
             currentBuild.description = "${libraries}/${versions} \
                                           profile: ${profiles} \
                                           build_type: ${build_types} \
-                                          branch: ${GIT_BRANCH}
-                                          "
+                                          branch: ${GIT_BRANCH}"
             def builds = [:]
             def conan_file
             // gets only the taget arch defined inside the profile
