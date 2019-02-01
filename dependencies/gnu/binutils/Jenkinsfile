@@ -60,5 +60,15 @@ pipeline {
           }
         }
       }
+
+      stage('Build') {
+        steps {
+          script {
+            sh """
+              echo "lets export it to ${conan_user}/${conan_channel}"
+            """
+          }
+        }
+      }
   }
 }
