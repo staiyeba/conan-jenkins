@@ -61,7 +61,7 @@ pipeline {
         }
       }
 
-      stage('Build') {
+      stage('Upload/ Export') {
         steps {
           script {
             sh """
