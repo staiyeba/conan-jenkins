@@ -37,7 +37,7 @@ pipeline {
             for (prof in profiles) {
               for (t_os in target_os) {
                   for (build in build_types) {
-                    String buildName = "${build}-${t_arch}-${prof}"
+                    String buildName = "${build}-${prof}"
 
                     builds[buildName] = {
                       node('conan_pipe_worker') {
