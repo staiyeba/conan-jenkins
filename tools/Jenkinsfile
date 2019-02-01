@@ -15,7 +15,7 @@ pipeline {
   parameters {
     string(name: 'Tools', defaultValue: '')
     string(name: 'ToolLocation', defaultValue: '')
-    string(name: 'Versions', defaultValue: '2.31')
+    string(name: 'Versions', defaultValue: '')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
     string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64, gcc-7.3.0-linux-x86_64, gcc-8.2.0-linux-i386, gcc-8.2.0-linux-x86_64')
