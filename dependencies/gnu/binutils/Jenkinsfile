@@ -65,7 +65,7 @@ pipeline {
         steps {
           script {
             sh """
-              echo "lets export it to ${conan_user}/${conan_channel}"
+              echo "lets export it to ${conan_user}/toolchain"
             """
           }
         }
