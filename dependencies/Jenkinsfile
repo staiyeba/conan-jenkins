@@ -17,7 +17,7 @@ pipeline {
     string(name: 'DepLocation', defaultValue: '')
     string(name: 'Versions', defaultValue: '')
     string(name: 'Build_types', defaultValue: 'Release, Debug')
-    string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
+//    string(name: 'Target_Architectures', defaultValue: 'x86_64, x86')
     string(name: 'Target_OS', defaultValue: 'Linux')
     string(name: 'Profiles', defaultValue: 'clang-6.0-linux-i386, clang-6.0-linux-x86_64, gcc-7.3.0-linux-x86_64, gcc-8.2.0-linux-i386, gcc-8.2.0-linux-x86_64')
   }
@@ -33,7 +33,7 @@ pipeline {
             def dep_location = "${params.DepLocation}"
 
 
-            def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
+    //        def target_architectures = "${params.Target_Architectures}".replaceAll("\\s", "").split(',')
             def build_types = "${params.Build_types}".replaceAll("\\s", "").split(',')
             def profiles = "${params.Profiles}".replaceAll("\\s", "").split(',')
 
@@ -43,9 +43,9 @@ pipeline {
             def builds = [:]
 
               for (prof in profiles) {
-                  for (t_arch in target_architectures) {
+    //              for (t_arch in target_architectures) {
                     for (build in build_types) {
-                      String buildName = "${dependencies}-${build}-${t_arch}-${prof}"
+                      String buildName = "${dependencies}-${build}-${prof}"
 
                       builds[buildName] = {
                         node('conan_pipe_worker') {
@@ -59,13 +59,11 @@ pipeline {
                                           echo "creating ${dependencies}/${versions}"
                                           conan create conan/${dependencies}/${versions} \
                                           -s build_type=${build} \
-                                          -s arch=${t_arch} \
                                           -pr ${prof} ${conan_user}/${conan_channel} --build missing
                                         else
                                           echo "creating ${dependencies}"
                                           conan create conan/${dependencies} \
                                           -s build_type=${build} \
-                                          -s arch=${t_arch} \
                                           -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel} --build missing
                                         fi
                                       elif [ -n "${dep_location}" ];
@@ -73,7 +71,6 @@ pipeline {
                                         echo "creating ${dep_location}/${dependencies}"
                                         conan create conan/${dep_location}/${dependencies} \
                                         -s build_type=${build} \
-                                        -s arch=${t_arch} \
                                         -pr ${prof} ${dependencies}/${versions}@${conan_user}/${conan_channel} --build missing
                                       fi
                                   """
@@ -81,7 +78,7 @@ pipeline {
                         }
                       }
                     }
-                  }
+              //    }
               }
             parallel builds
           }
